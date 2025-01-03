@@ -7,10 +7,7 @@
 |
 */
 
+import UsersController from '#controllers/users_controller'
 import router from '@adonisjs/core/services/router'
 
-router.get('/', async () => {
-  return {
-    hello: 'world',
-  }
-})
+router.post('/users', [UsersController, 'store'])
