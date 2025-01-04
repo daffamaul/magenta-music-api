@@ -1,4 +1,4 @@
-import InvariantException from '#exceptions/invariant_exception'
+import ValidationException from '#exceptions/validation_exception'
 import User from '#models/user'
 
 export class UserService {
@@ -14,7 +14,9 @@ export class UserService {
     const user = await User.findByOrFail('email', email)
 
     if (user.$attributes.email) {
-      throw new InvariantException('User unsuccessful added. Email has been already used')
+      throw new ValidationException('User unsuccessful added. Email has been already used', {
+        code: 'E_EMAIL_ALREADY_IN_USE',
+      })
     }
   }
 }
