@@ -1,6 +1,7 @@
 import app from '@adonisjs/core/services/app'
 import { HttpContext, ExceptionHandler } from '@adonisjs/core/http'
-import { errors } from '@vinejs/vine'
+import { errors as vineError } from '@vinejs/vine'
+import { errors as lucidErrors } from '@adonisjs/lucid'
 
 export default class HttpExceptionHandler extends ExceptionHandler {
   /**
@@ -14,12 +15,20 @@ export default class HttpExceptionHandler extends ExceptionHandler {
    * response to the client
    */
   async handle(error: unknown, ctx: HttpContext) {
-    if (error instanceof errors.E_VALIDATION_ERROR) {
+    if (error instanceof vineError.E_VALIDATION_ERROR) {
       const messages = error.messages.map(({ message }: any) => message)
 
-      ctx.response.status(422).send({
+      ctx.response.status(error.status).send({
         status: 'fail',
         messages,
+      })
+      return
+    }
+
+    if (error instanceof lucidErrors.E_ROW_NOT_FOUND) {
+      ctx.response.status(error.status).send({
+        status: 'fail',
+        message: error.message,
       })
       return
     }
@@ -34,6 +43,11 @@ export default class HttpExceptionHandler extends ExceptionHandler {
    * @note You should not attempt to send a response from this method.
    */
   async report(error: unknown, ctx: HttpContext) {
+    if (error instanceof vineError.E_VALIDATION_ERROR) {
+      ctx.logger.error({ err: error }, error.message)
+      return
+    }
+
     return super.report(error, ctx)
   }
 }
