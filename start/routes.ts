@@ -8,6 +8,7 @@
 */
 
 import AlbumsController from '#controllers/albums_controller'
+import AuthenticationController from '#controllers/authentication_controller'
 import SongController from '#controllers/song_controller'
 import UsersController from '#controllers/users_controller'
 import router from '@adonisjs/core/services/router'
@@ -32,3 +33,11 @@ router
     router.delete('/:id', [AlbumsController, 'destroy'])
   })
   .prefix('/albums')
+
+router
+  .group(() => {
+    router.post('/', [AuthenticationController, 'store'])
+    router.put('/', [AuthenticationController, 'update'])
+    router.delete('/', [AuthenticationController, 'destroy'])
+  })
+  .prefix('/authentications')

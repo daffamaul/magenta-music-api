@@ -29,4 +29,9 @@ export class UserService {
       })
     }
   }
+
+  async verifyCredentials({ email, password }: any) {
+    const user = await User.verifyCredentials(email, password)
+    return user
+  }
 }
