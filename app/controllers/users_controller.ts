@@ -10,11 +10,13 @@ export default class UsersController {
   async store({ request, response }: HttpContext) {
     const payload = await request.validateUsing(createUserValidator)
     await this.userService.verifyEmail(payload)
-    await this.userService.add(payload)
+    const userId = await this.userService.add(payload)
 
     return response.status(201).send({
       status: 'success',
-      message: 'User successfully added',
+      data: {
+        userId,
+      },
     })
   }
 }

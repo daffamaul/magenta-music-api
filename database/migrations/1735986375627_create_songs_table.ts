@@ -10,7 +10,7 @@ export default class extends BaseSchema {
       table.integer('year').notNullable()
       table.string('genre').notNullable()
       table.string('performer').notNullable()
-      table.integer('duration').notNullable()
+      table.integer('duration').nullable()
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })

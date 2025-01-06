@@ -12,10 +12,17 @@ export default class SongController {
    */
   async index({ request }: HttpContext) {
     const songs = await this.songService.index(request.qs())
+    const formatResponse = songs?.map(({ id, title, performer }) => ({
+      id,
+      title,
+      performer,
+    }))
 
     return {
       status: 'success',
-      data: songs,
+      data: {
+        songs: formatResponse,
+      },
     }
   }
 
@@ -24,11 +31,13 @@ export default class SongController {
    */
   async store({ request, response }: HttpContext) {
     const payload = await request.validateUsing(payloadSongValidator)
-    await this.songService.add(payload)
+    const songId = await this.songService.add(payload)
 
     return response.status(201).send({
       status: 'success',
-      message: 'Song successfully added',
+      data: {
+        songId,
+      },
     })
   }
 
@@ -36,11 +45,13 @@ export default class SongController {
    * Show individual record
    */
   async show({ params }: HttpContext) {
-    const song = await this.songService.show(params)
+    const song: any = await this.songService.show(params)
 
     return {
       status: 'success',
-      data: song,
+      data: {
+        song,
+      },
     }
   }
 

@@ -6,6 +6,9 @@ export default class Song extends BaseModel {
   declare id: number
 
   @column()
+  declare albumId: number
+
+  @column()
   declare title: string
 
   @column()

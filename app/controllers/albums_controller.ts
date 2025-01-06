@@ -1,17 +1,23 @@
 import { AlbumService } from '#services/album_service'
+import { SongService } from '#services/song_service'
 import { payloadAlbumValidator } from '#validators/album'
 import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
 
 @inject()
 export default class AlbumsController {
-  constructor(private albumService: AlbumService) {}
+  constructor(
+    private albumService: AlbumService,
+    private songService: SongService
+  ) {}
 
   /**
    * Show individual record
    */
   async show({ params }: HttpContext) {
-    const album = await this.albumService.index(params)
+    const album = await this.albumService.show(params)
+    const songs = await this.songService.showByAlbumId(params)
+    const songsFormatRespose = songs.map(({ id, title, performer }) => ({ id, title, performer }))
     const { id, name, year } = album
 
     return {
@@ -21,6 +27,7 @@ export default class AlbumsController {
           id,
           name,
           year,
+          songs: songsFormatRespose,
         },
       },
     }
@@ -31,11 +38,13 @@ export default class AlbumsController {
    */
   async store({ request, response }: HttpContext) {
     const payload = await request.validateUsing(payloadAlbumValidator)
-    await this.albumService.add(payload)
+    const albumId = await this.albumService.add(payload)
 
     return response.status(201).send({
       status: 'success',
-      message: 'Album successfully added',
+      data: {
+        albumId,
+      },
     })
   }
 
