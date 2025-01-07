@@ -1,5 +1,4 @@
 import AuthJwt from '#models/auth_jwt'
-import db from '@adonisjs/lucid/services/db'
 
 export class AuthenticationService {
   async addRefreshToken(token: string) {

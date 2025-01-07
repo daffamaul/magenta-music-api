@@ -2,6 +2,7 @@ import app from '@adonisjs/core/services/app'
 import { HttpContext, ExceptionHandler } from '@adonisjs/core/http'
 import { errors as vineError } from '@vinejs/vine'
 import { errors as lucidErrors } from '@adonisjs/lucid'
+import { errors as authErrors } from '@adonisjs/auth'
 
 export default class HttpExceptionHandler extends ExceptionHandler {
   /**
@@ -26,6 +27,14 @@ export default class HttpExceptionHandler extends ExceptionHandler {
     }
 
     if (error instanceof lucidErrors.E_ROW_NOT_FOUND) {
+      ctx.response.status(error.status).send({
+        status: 'fail',
+        message: error.message,
+      })
+      return
+    }
+
+    if (error instanceof authErrors.E_UNAUTHORIZED_ACCESS) {
       ctx.response.status(error.status).send({
         status: 'fail',
         message: error.message,

@@ -4,8 +4,8 @@ import moment from 'moment'
 
 export class SongService {
   async add({ albumId, title, year, genre, performer, duration }: any) {
-    const created_at = moment().format('YYYY-MM-DD HH:mm:ss')
-    const updated_at = created_at
+    const createdAt = moment().format('YYYY-MM-DD HH:mm:ss')
+    const updatedAt = createdAt
     const songId = await db.table('songs').returning('id').insert({
       album_id: albumId,
       title,
@@ -13,8 +13,8 @@ export class SongService {
       genre,
       performer,
       duration,
-      created_at,
-      updated_at,
+      created_at: createdAt,
+      updated_at: updatedAt,
     })
 
     return songId[0]
@@ -39,7 +39,7 @@ export class SongService {
     return song
   }
 
-  async show({ id }: any) {
+  async show(id: any) {
     const song = await Song.findOrFail(id)
     return song
   }

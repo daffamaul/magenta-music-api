@@ -4,13 +4,13 @@ import moment from 'moment'
 
 export class AlbumService {
   async add({ name, year }: any) {
-    const created_at = moment().format('YYYY-MM-DD HH:mm:ss')
-    const updated_at = created_at
+    const createdAt = moment().format('YYYY-MM-DD HH:mm:ss')
+    const updatedAt = createdAt
     const albumId = await db.table('albums').returning('id').insert({
       name,
       year,
-      created_at,
-      updated_at,
+      created_at: createdAt,
+      updated_at: updatedAt,
     })
 
     return albumId[0]

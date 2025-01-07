@@ -45,7 +45,8 @@ export default class SongController {
    * Show individual record
    */
   async show({ params }: HttpContext) {
-    const song: any = await this.songService.show(params)
+    const { id } = params
+    const song: any = await this.songService.show(id)
 
     return {
       status: 'success',

@@ -7,11 +7,13 @@
 |
 */
 
-import AlbumsController from '#controllers/albums_controller'
-import AuthenticationController from '#controllers/authentication_controller'
-import SongController from '#controllers/song_controller'
-import UsersController from '#controllers/users_controller'
+const AlbumsController = () => import('#controllers/albums_controller')
+const AuthenticationController = () => import('#controllers/authentication_controller')
+const PlaylistsController = () => import('#controllers/playlists_controller')
+const SongController = () => import('#controllers/song_controller')
+const UsersController = () => import('#controllers/users_controller')
 import router from '@adonisjs/core/services/router'
+import { middleware } from './kernel.js'
 
 router.post('/users', [UsersController, 'store'])
 
@@ -41,3 +43,15 @@ router
     router.delete('/', [AuthenticationController, 'destroy'])
   })
   .prefix('/authentications')
+
+router
+  .group(() => {
+    router.post('/', [PlaylistsController, 'store'])
+    router.get('/', [PlaylistsController, 'index'])
+    router.delete('/:id', [PlaylistsController, 'destroy'])
+    router.post('/:id/songs', [PlaylistsController, 'addSongToPlaylist'])
+    router.get('/:id/songs', [PlaylistsController, 'getSongsInPlaylist'])
+    router.delete('/:id/songs', [PlaylistsController, 'deleteSongInPlaylist'])
+  })
+  .prefix('/playlists')
+  .use(middleware.auth())

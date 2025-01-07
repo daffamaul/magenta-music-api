@@ -6,15 +6,15 @@ import moment from 'moment'
 
 export class UserService {
   async add({ email, password, fullname: full_name }: any): Promise<void> {
-    const created_at = moment().format('YYYY-MM-DD HH:mm:ss')
-    const updated_at = created_at
+    const createdAt = moment().format('YYYY-MM-DD HH:mm:ss')
+    const updatedAt = createdAt
     const hashedPassword = await hash.make(password)
     const userId = await db.table('users').returning('id').insert({
       email,
       password: hashedPassword,
       full_name,
-      created_at,
-      updated_at,
+      created_at: createdAt,
+      updated_at: updatedAt,
     })
 
     return userId[0]
