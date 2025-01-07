@@ -91,7 +91,6 @@ export default class PlaylistsController {
 
   async deleteSongInPlaylist({ params, request, auth }: HttpContext) {
     const { songId } = await request.validateUsing(payloadPlaylistSongValidator)
-    console.log(typeof songId)
     const { id } = params
     const { id: owner } = auth.getUserOrFail()
 

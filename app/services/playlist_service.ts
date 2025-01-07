@@ -36,7 +36,7 @@ export class PlaylistService {
 
   async verifyOwner(owner: number, id: string) {
     const [playlist] = await db.from('playlists').where('id', id)
-    console.log(playlist)
+
     if (!playlist) {
       throw new lucidErrors.E_ROW_NOT_FOUND()
     }
